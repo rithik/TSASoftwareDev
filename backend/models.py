@@ -54,6 +54,7 @@ class School(Base):
 
     def __init__(self, name, email, address, password):
         self.name = name
+        self.email = email
         self.address = address
         self.password = password
 
@@ -67,7 +68,8 @@ class College(Base):
 
     def __init__(self, name, email, password):
         self.name = name
-        self.password
+        self.email = email
+        self.password = password
 
 class Transcript(Base):
     __tablename__ = 'transcripts'
