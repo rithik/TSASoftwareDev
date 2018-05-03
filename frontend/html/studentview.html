@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>The Materialize Selects Example</title>
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+    <link rel = "stylesheet"
+    href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel = "stylesheet"
+    href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+    <script type = "text/javascript"
+    src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+    </script> 
+
+    <script>
+    $(document).ready(function() {
+    $('select').material_select();
+    });
+
+
+    function formdata()
+    {
+    }
+    </script>
+    <style>
+    fieldset {
+    border: 0;
+    }
+    </style>
+</head>
+
+<body> 
+      <nav>
+            <div class="nav-wrapper orange">
+            <a href="#" class="brand-logo">Welcome username</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+                <li><a href="welcome.html">Home</a></li>
+            </ul>
+            </div>
+      </nav>
+
+      <div class = "container">
+            <h1 class="header center orange-text">Upload your transcript</h1>
+            <br><br>
+
+            <div class = "row center">
+                <fieldset class = "col s12 white" action = "">
+
+                    <div class="file-field input-field">
+                        <div class="btn orange">
+                            <span>File</span>
+                            <input type="file">
+                            </div>
+                            <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class = "row">
+                        <select multiple id = "type">
+                        <option value = "" disabled selected>College</option>
+                        <option value = "1">College #1</option>
+                        <option value = "2">College #2</option>
+                        </select>                       
+                        <br>
+                        <button class="btn waves-effect waves-light orange" type="submit" name="action" onclick="formdata()">Submit
+                        </button>      
+                    </div>
+
+                </fieldset>   
+                <br><br><br>
+                 <table id = "studentViewTable">
+                      <thead>
+                        <tr>
+                            <th>College</th>
+                            <th>Recieved</th>
+                            <th>Filename</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>Alvin</td>
+                          <td>Eclair</td>
+                          <td>$0.87</td>
+                        </tr>
+                        <tr>
+                          <td>Alan</td>
+                          <td>Jellybean</td>
+                          <td>$3.76</td>
+                        </tr>
+                        <tr>
+                          <td>Jonathan</td>
+                          <td>Lollipop</td>
+                          <td>$7.00</td>
+                        </tr>
+                      </tbody>
+                </table>    
+            </div>
+      </div>
+</body>   
+</html>

@@ -1,0 +1,76 @@
+<html>
+<head>
+    <title>The Materialize Selects Example</title>
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+    <link rel = "stylesheet"
+    href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel = "stylesheet"
+    href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+    <script type = "text/javascript"
+    src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+    </script> 
+
+    <script>
+    $(document).ready(function() {
+    $('select').material_select();
+    });
+
+
+    function formdata()
+    {
+    }
+    </script>
+    <style>
+    fieldset {
+    border: 0;
+    }
+    </style>
+</head>
+
+<body> 
+      <nav>
+            <div class="nav-wrapper orange">
+            <a href="#" class="brand-logo">Welcome username</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                  <li><a href="welcome.html">Home</a></li>
+            </ul>
+            </div>
+      </nav>
+
+      <div class = "container">
+            <h1 class="header center orange-text">Student Transcripts</h1>
+
+            <div class = "row center">
+                <br><br><br>
+                 <table id = "collegeViewTable">
+                      <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Username</th>
+                            <th>Transcript</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td>Alvin</td>
+                          <td>Eclair</td>
+                          <td>$0.87</td>
+                        </tr>
+                        <tr>
+                          <td>Alan</td>
+                          <td>Jellybean</td>
+                          <td>$3.76</td>
+                        </tr>
+                        <tr>
+                          <td>Jonathan</td>
+                          <td>Lollipop</td>
+                          <td>$7.00</td>
+                        </tr>
+                      </tbody>
+                </table>    
+            </div>
+      </div>
+</body>   
+</html>
