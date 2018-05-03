@@ -29,11 +29,7 @@ def log(msg):
 @app.route('/signout')
 def signout():
     session.pop('csrf', None)
-    return redirect("/")
-
-@app.route('/')
-def home_page():
-    return render_template('index.html')
+    return "index.html"
 
 @app.route('/school/<school_id>/register/student')
 def create_student(school_id): # Students must be registered through their school
@@ -44,17 +40,24 @@ def create_student(school_id): # Students must be registered through their schoo
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
         if not email.index("@") > 0 and not email.index(".") > email.index("@"):
-            return redirect(url_for('.home_page'))
+            return "Error: Invalid Email"
         if not confirm_password == password:
-            return redirect(url_for('.home_page'))
+            return "Error: Invalid Email"
         u = Student.query.filter_by(email=email).count()
         if u == 0:
             new_student = Student(first_name, last_name, email, password, int(school_id))
             db_session.add(new_student)
             db_session.commit()
+            new_transcript = Transcript()
+            school = School
+            new_transcript.student = Student.query.filter_by(email=email).first()
+            new_transcript.school = School.query.filter_by(id=int(school_id)).first()
+            db_session.add(new_transcript)
+            db_session.commit()
             log('Student Created')
-            return redirect(url_for('.home_page'))
-        return redirect(url_for('.home_page'))
+            tid = new_transcript.id
+            return tid + " Student and Transcript Created -- display data from transcript/transcript_id"
+        return "Error: Student not created"
 
 @app.route('/register/school')
 def create_school():
@@ -70,7 +73,8 @@ def create_school():
         db_session.add(new_school)
         db_session.commit()
         log('School Created')
-        return redirect(url_for('.home_page'))
+        sid = new_school.id
+        return sid + " School Created -- display data from /school/school_id"
 
 @app.route('/register/college')
 def create_college():
@@ -85,7 +89,8 @@ def create_college():
         db_session.add(new_college)
         db_session.commit()
         log('College Created')
-        return redirect(url_for('.home_page'))
+        cid = new_college.id
+        return cid + " College Created -- display data from /college/college_id"
 
 @app.route('/login')
 def login_method():
@@ -96,45 +101,40 @@ def login_method():
         if not s == 0:
             student = Student.query.filter_by(email=email).first()
             if password == student.password:
-                session['csrf'] = json.dumps({'user': student.id, 'type': 'student'})
-                return redirect(url_for('.view_transcript'))
+                return "{'user': student.id, 'type': 'student'}"
         sch = School.query.filter_by(email=email).count()
         if not sch == 0:
             school = School.query.filter_by(email=email).first()
             if password == school.password:
-                session['csrf'] = json.dumps({'user': school.id, 'type': 'school'})
-                return redirect('/school/' + school.id)
+                return "{'user': school.id, 'type': 'school'}"
         col = College.query.filter_by(email=email).count()
         if not col == 0:
             college = College.query.filter_by(email=email).first()
             if password == College.password:
-                session['csrf'] = json.dumps({'user': college.id, 'type': 'college'})
-                return redirect('/college/' + college.id)
+                return "{'user': college.id, 'type': 'college'})"
         return "Error: Invalid Login"
-    if request.method == "GET":
-        return render_template('login.html')
 
 @app.route('/school/<school_id>')
 def school_page(school_id):
-    if request.method == "GET":
+    if request.method == "POST":
         if int(school_id) == int(session['csrf']['user']) and session['csrf']['type'] == 'school':
             school = School.query.filter_by(id=int(school_id)).first()
             d = {}
             for k in school.transcripts:
                 d[k.id] = k.student.first_name + " " + k.student.last_name
-            return render_template('school.html', transcripts=d)
+            return json.dumps(d)
         else:
             return 'Error: Not Authorized'
 
 @app.route('/college/<college_id>')
 def college_page(college_id):
-    if request.method == "GET":
+    if request.method == "POST":
         if int(college_id) == int(session['csrf']['user']) and session['csrf']['type'] == 'college':
             college = College.query.filter_by(id=int(college_id)).first()
             d = {}
             for k in college.transcripts:
                 d[k.id] = k.student.first_name + " " + k.student.last_name
-            return render_template('college.html', transcripts=d)
+            return json.dumps(d)
         else:
             return 'Error: Not Authorized'
 
@@ -151,21 +151,21 @@ def add_course(tid):
             db_session.add(new_course)
             db_session.commit()
             log('Added Course')
-        return redirect(url_for('.view_transcript'))
+        return "Course Added -- go back to /transcript/transcript_id"
 
 @app.route('/transcript/<tid>')
 def view_transcript(tid):
-    if request.method == "GET":
+    if request.method == "POST":
         t = Transcript.query.filter_by(id=int(tid)).first()
         if t.student.id == int(session['csrf']['user']) or t.school.id == int(session['csrf']['user']):
             courses = t.courses
-            return render_template('transcript.html', courses=courses)
+            return json.dumps(courses)
         q = []
         for x in t.colleges:
             q.append(x.id)
         if int(session['csrf']['user']) in q:
             courses = t.courses
-            return render_template('transcript.html', courses=courses)
+            return json.dumps(courses)
         return "Error: Not Authorized"
 
 @app.route('/transcript/<tid>/add_college')
@@ -178,7 +178,7 @@ def add_college(tid):
             t.colleges.append(c)
             db_session.add(t)
             db_session.commit()
-            return (redirect(url_for('.view_transcript')))
+            return "College Added -- go back to /transcript/transcript_id"
     return "Error: Not Authorized"
 
 if __name__ == '__main__':
