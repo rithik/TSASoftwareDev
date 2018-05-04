@@ -26,13 +26,13 @@ def log(msg):
     else:
         print(msg, file=sys.stderr)
 
-@app.route('/signout')
+@app.route('/signout', methods=["GET", "POST"])
 def signout():
-    session.pop('type', None)
+    db_session.pop('type', None)
     session.pop('user', None)
     return redirect("/")
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def home_page():
     if request.method == "GET":
         t = session.get('type', {})
@@ -48,7 +48,7 @@ def home_page():
             pass
         return render_template('welcome.html')
 
-@app.route('/school/<school_id>/register/student')
+@app.route('/school/<school_id>/register/student', methods=["GET", "POST"])
 def create_student(school_id): # Students must be registered through their school
     if request.method == "POST":
         first_name = request.form["first_name"]
@@ -95,7 +95,7 @@ def create_inst():
             log('College Created')
         return redirect(url_for('.home_page'))
 
-@app.route('/login')
+@app.route('/login', methods=["GET", "POST"])
 def login_method():
     if request.method == "POST":
         email = request.form['email']
@@ -125,7 +125,7 @@ def login_method():
     if request.method == "GET":
         return render_template('login.html')
 
-@app.route('/school/<school_id>')
+@app.route('/school/<school_id>', methods=["GET", "POST"])
 def school_page(school_id):
     if request.method == "GET":
         t = session.get('type', {})
@@ -139,7 +139,7 @@ def school_page(school_id):
         else:
             return 'Error: Not Authorized'
 
-@app.route('/college/<college_id>')
+@app.route('/college/<college_id>', methods=["GET", "POST"])
 def college_page(college_id):
     if request.method == "GET":
         t = session.get('type', {})
@@ -153,7 +153,7 @@ def college_page(college_id):
         else:
             return 'Error: Not Authorized'
 
-@app.route('/transcript/<tid>/add')
+@app.route('/transcript/<tid>/add', methods=["GET", "POST"])
 def add_course(tid):
     if request.method == "POST":
         t = Transcript.query.filter_by(id=int(tid)).first()
@@ -172,7 +172,7 @@ def add_course(tid):
     if request.method == "GET":
         return render_template('add_course.html')
 
-@app.route('/transcript/<tid>')
+@app.route('/transcript/<tid>', methods=["GET", "POST"])
 def view_transcript(tid):
     if request.method == "GET":
         t = Transcript.query.filter_by(id=int(tid)).first()
@@ -189,7 +189,7 @@ def view_transcript(tid):
             return render_template('transcript.html', courses=courses)
         return "Error: Not Authorized"
 
-@app.route('/transcript/<tid>/add_college')
+@app.route('/transcript/<tid>/add_college', methods=["GET", "POST"])
 def add_college(tid):
     if request.method == "POST":
         t = Transcript.query.filter_by(id=int(tid)).first()
