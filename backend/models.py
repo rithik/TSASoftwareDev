@@ -49,13 +49,11 @@ class School(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(length=500))
     email = Column(String(length=120), unique=True)
-    address = Column(String(length=10000))
     password = Column(String(length=50))
 
-    def __init__(self, name, email, address, password):
+    def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        self.address = address
         self.password = password
 
 class College(Base):

@@ -73,7 +73,6 @@ def create_inst():
     if request.method == "POST":
         name = request.form["name"]
         email = request.form["email"]
-        address = request.form["address"]
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
         option = request.form['option']
