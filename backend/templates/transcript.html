@@ -1,0 +1,79 @@
+<html>
+   <head>
+      <title>SA⁺FE SEND</title>
+      <meta name = "viewport" content = "width = device-width, initial-scale = 1">
+      <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+
+      <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+      <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+
+      <script>if (window.module) module = window.module;</script>
+
+      <script>
+         $(document).ready(function() {
+            $('select').material_select();
+         });
+
+      </script>
+
+      <style>
+        fieldset {
+              border: 0;
+          }
+      </style>
+   </head>
+
+   <nav class="light-blue lighten-1" role="navigation">
+
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">SA⁺FE SEND</a>
+      <ul class="right hide-on-med-and-down">
+
+        {% if type == 'student' %}
+          <li><a href="/transcript/{{ tid }}/add_college">Add College</a></li>
+        {% endif %}
+
+        {% if type == 'school' %}
+          <li><a href="/transcript/{{ tid }}/add">Add Course</a></li>
+        {% endif %}
+
+        <li><a href="/signout">Logout</a></li>
+
+      </ul>
+    </div>
+  </nav>
+
+   <body class = "container">
+         <h1 class="header center orange-text">Transcript for {{ name }}!</h1>
+         <br><br>
+
+      {% if courses|length > 0 %}
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Course Name</th>
+            <th scope="col">Grade</th>
+            <th scope="col">Credits</th>
+            <th scope="col">Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for k in courses %}
+          <tr>
+            <th scope="row">{{ k.name }}</th>
+            <td>{{ k.grade }}</td>
+            <td>{{ k.credits }}</td>
+            <td>{{ k.year }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+          <center> No courses to show </center>
+      {% endif %}
+
+   </body>
+</html>

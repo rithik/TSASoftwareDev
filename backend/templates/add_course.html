@@ -17,21 +17,6 @@
             $('select').material_select();
          });
 
-
-         function formdata()
-         {
-          name = document.getElementById('name').value;
-          email = document.getElementById('email').value;
-          password = document.getElementById('password').value;
-          type = document.getElementById('type').value;
-          if (name != "" && email!="" && password !="" && type!="")
-          {
-              console.log(name);
-              console.log(email);
-              console.log(password);
-              console.log(type);
-          }
-         }
       </script>
 
       <style>
@@ -42,17 +27,17 @@
    </head>
 
    <body class = "container">
-         <h1 class="header center orange-text">Student Registration</h1>
+         <h1 class="header center orange-text">Add Course</h1>
          <br><br>
 
       <div class = "row center">
         <form method="post">
          <fieldset class = "col s12 white" action = "">
-            First Name <input type="text" name="first_name" id="fname"/><br><br>
-            Last Name <input type="text" name="last_name" id="lname"/><br><br>
-            Email <input type="text" name="email" id="email"/><br><br>
-            New Password <input type="password" name="password" id="password"/><br><br>
-            <button class="btn waves-effect waves-light orange" type="submit">Submit</button>
+            Name <input type="text" name="name" id="name"/><br><br>
+            Grade <input type="text" name="grade" id="grade"/><br><br>
+            Credits <input type="text" name="credits" id="credits"/><br><br>
+            Year <input type="text" name="year" id="year"/><br><br>
+            <button class="btn waves-effect waves-light orange" type="submit">Add Course</button>
          </fieldset>
          </form>
       </div>

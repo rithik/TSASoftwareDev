@@ -28,7 +28,7 @@ def log(msg):
 
 @app.route('/signout', methods=["GET", "POST"])
 def signout():
-    db_session.pop('type', None)
+    session.pop('type', None)
     session.pop('user', None)
     return redirect("/")
 
@@ -37,15 +37,13 @@ def home_page():
     if request.method == "GET":
         t = session.get('type', {})
         u = session.get('user', {})
-        try:
-            if t == 'student':
-                return redirect("/transcript/" + u)
-            elif t == 'school':
-                return redirect("/school/" + u)
-            elif t == 'college':
-                return redirect("/college/" + u)
-        except:
-            pass
+        if t == 'student':
+            return redirect("/transcript/" + str(u))
+        elif t == 'school':
+            return redirect("/school/" + str(u))
+        elif t == 'college':
+            return redirect("/college/" + str(u))
+
         return render_template('welcome.html')
 
 @app.route('/school/<school_id>/register/student', methods=["GET", "POST"])
@@ -110,21 +108,21 @@ def login_method():
             if password == student.password:
                 session['user'] = student.id
                 session['type'] = 'student'
-                return redirect(url_for('.view_transcript'))
+                return redirect('/transcript/' + str(student.id))
         sch = School.query.filter_by(email=email).count()
         if not sch == 0:
             school = School.query.filter_by(email=email).first()
             if password == school.password:
                 session['user'] = school.id
                 session['type'] = 'school'
-                return redirect('/school/' + school.id)
+                return redirect('/school/' + str(school.id))
         col = College.query.filter_by(email=email).count()
         if not col == 0:
             college = College.query.filter_by(email=email).first()
-            if password == College.password:
+            if password == college.password:
                 session['user'] = college.id
                 session['type'] = 'college'
-                return redirect('/college/' + college.id)
+                return redirect('/college/' + str(college.id))
         return "Error: Invalid Login"
     if request.method == "GET":
         return render_template('login.html')
@@ -140,7 +138,7 @@ def school_page(school_id):
             for k in transcripts:
                 s = Student.query.filter_by(id=k.id).first()
                 d[k.id] = s.first_name + " " + s.last_name
-            return render_template('school.html', transcripts=d)
+            return render_template('school.html', transcripts=d, sid=u)
         else:
             return 'Error: Not Authorized'
 
@@ -156,26 +154,26 @@ def college_page(college_id):
                 if int(college_id) in k._colleges:
                     s = Student.query.filter_by(id=k.id).first()
                     d[k.id] = s.first_name + " " + s.last_name
-            return render_template('college.html', transcripts=d)
+            return render_template('college.html', transcripts=d, cid=u)
         else:
             return 'Error: Not Authorized'
 
 @app.route('/transcript/<tid>/add', methods=["GET", "POST"])
 def add_course(tid):
     if request.method == "POST":
-        t = Transcript.query.filter_by(id=int(tid)).first()
+        transcripts = Transcript.query.filter_by(id=int(tid)).first()
         t = session.get('type', {})
         u = session.get('user', {})
-        if t.school.id == int(u) and t == 'school':
+        if transcripts.school == int(u) and t == 'school':
             course_name = request.form["name"]
             grade = request.form["grade"]
             credits = float(request.form["credits"])
             year = int(request.form["year"])
-            new_course = Course(name, grade, credits, year, int(tid))
+            new_course = Course(course_name, grade, credits, year, int(tid))
             db_session.add(new_course)
             db_session.commit()
             log('Added Course')
-        return redirect(url_for('.view_transcript'))
+            return redirect('/transcript/' + tid)
     if request.method == "GET":
         return render_template('add_course.html')
 
@@ -185,21 +183,23 @@ def view_transcript(tid):
         transcripts = Transcript.query.filter_by(id=int(tid)).first()
         t = session.get('type', {})
         u = session.get('user', {})
-        if t.student.id == int(u) or t.school.id == int(u) or int(u) in transcripts._colleges:
+        if transcripts.student == int(u) or transcripts.school == int(u) or int(u) in transcripts._colleges:
             courses = Course.query.filter_by(transcript_id=int(tid)).all()
-            return render_template('transcript.html', courses=courses)
+            stu = Student.query.filter_by(id=int(tid)).first()
+            name = stu.first_name + " " + stu.last_name
+            return render_template('transcript.html', courses=courses, name=name, tid=tid, type=t)
         return "Error: Not Authorized"
 
 @app.route('/transcript/<tid>/add_college', methods=["GET", "POST"])
 def add_college(tid):
     if request.method == "POST":
-        t = Transcript.query.filter_by(id=int(tid)).first()
+        transcripts = Transcript.query.filter_by(id=int(tid)).first()
         t = session.get('type', {})
         u = session.get('user', {})
-        if t.student.id == int(u):
-            cid = request.form['college_id']
-            t._colleges.append(cid)
-            return redirect(url_for('.view_transcript'))
+        if transcripts.student == int(u):
+            cid = int(request.form['college_id'])
+            transcripts._colleges.append(cid)
+            return redirect('/transcript/' + tid)
         return "Error: Not Authorized"
     if request.method == "GET":
         return render_template('add_college.html')

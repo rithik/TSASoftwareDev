@@ -1,0 +1,69 @@
+<html>
+   <head>
+      <title>SA⁺FE SEND</title>
+      <meta name = "viewport" content = "width = device-width, initial-scale = 1">
+      <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+
+      <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+      <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+
+      <script>if (window.module) module = window.module;</script>
+
+      <script>
+         $(document).ready(function() {
+            $('select').material_select();
+         });
+
+      </script>
+
+      <style>
+        fieldset {
+              border: 0;
+          }
+      </style>
+   </head>
+
+   <nav class="light-blue lighten-1" role="navigation">
+
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">SA⁺FE SEND</a>
+
+      <ul class="right hide-on-med-and-down">
+
+        <li><a href="/signout">Logout</a></li>
+
+      </ul>
+
+    </div>
+  </nav>
+
+   <body class = "container">
+         <h1 class="header center orange-text">Welcome!</h1>
+         <br><br>
+
+      {% if transcripts.items()|length > 0 %}
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for id, name in transcripts.items() %}
+          <tr>
+            <th scope="row">{{ id }}</th>
+            <td><a href="/transcript/{{ id }}">{{ name }}</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+          <center> No transcripts to show </center>
+      {% endif %}
+
+   </body>
+</html>
