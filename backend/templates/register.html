@@ -21,26 +21,15 @@
          function formdata()
          {
           name = document.getElementById('name').value;
-          username = document.getElementById('username').value;
+          email = document.getElementById('email').value;
           password = document.getElementById('password').value;
           type = document.getElementById('type').value; <!--Student: 1, College: 2-->
-          if (name != "" && username!="" && password !="" && type!="")
+          if (name != "" && email!="" && password !="" && type!="")
           {
               console.log(name);
-              console.log(username);
+              console.log(email);
               console.log(password);
               console.log(type);
-              $("button").click(function(){
-                $.post("register",
-                {
-                    name: name,
-                    email: "Duckburg",
-                    password: 
-                },
-                function(data, status){
-                    alert("Data: " + data + "\nStatus: " + status);
-                });
-              });
           }
          }
       </script>
@@ -59,7 +48,7 @@
       <div class = "row center">
          <fieldset class = "col s12 white" action = "">
             Institution Name <input type="text" id="name"/><br><br>
-            New Username <input type="text" id="username"/><br><br>
+            Email <input type="text" id="email"/><br><br>
             New Password <input type="password" id="password"/><br><br>
             <div class = "row">
                  <select id = "type">

@@ -1,0 +1,65 @@
+<html>
+   <head>
+      <title>SafeSend</title>
+      <meta name = "viewport" content = "width = device-width, initial-scale = 1">      
+      <link rel = "stylesheet"
+         href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel = "stylesheet"
+         href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+      <script type = "text/javascript"
+         src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js">
+      </script> 
+      
+      <script>
+         $(document).ready(function() {
+            $('select').material_select();
+         });
+
+
+         function formdata()
+         {
+          name = document.getElementById('name').value;
+          username = document.getElementById('username').value;
+          password = document.getElementById('password').value;
+          type = document.getElementById('type').value; <!--Student: 1, College: 2-->
+          if (name != "" && username!="" && password !="" && type!="")
+          {
+              console.log(name);
+              console.log(username);
+              console.log(password);
+              console.log(type);
+          }
+         }
+      </script>
+      <style>
+        fieldset {
+              border: 0;
+          }
+      </style>
+   </head>
+   
+   <body class = "container"> 
+         <h1 class="header center orange-text">Register</h1>
+         <br><br>
+  
+      <div class = "row center">
+         <fieldset class = "col s12 white" action = "">
+            Student Name <input type="text" id="name"/><br><br>
+            New Username <input type="text" id="username"/><br><br>
+            New Password <input type="text" id="password"/><br><br>
+            <div class = "row">
+                 <select id = "type">
+                  <option value = "" disabled selected>Type</option>
+                  <option value = "1">Student</option>
+                  <option value = "2">College</option>
+                </select>                       
+                <br>
+                <button class="btn waves-effect waves-light orange" type="submit" name="action" onclick="formdata()">Submit
+                </button>      
+            </div>
+         </fieldset>       
+      </div>
+
+   </body>   
+</html>

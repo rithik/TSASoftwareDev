@@ -66,7 +66,7 @@ def create_student(school_id): # Students must be registered through their schoo
     if request.method == "GET":
         return render_template('student_register.html')
 
-@app.route('/register')
+@app.route('/register', methods=["GET", "POST"])
 def create_inst():
     if request.method == "GET":
         return render_template('register.html')
@@ -75,7 +75,7 @@ def create_inst():
         email = request.form["email"]
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
-        option = request.form['option']
+        option = {1: 'school', 2: 'college'}[request.form['option']]
         if not confirm_password == password:
             return redirect(url_for('.home_page'))
         if option == 'school':
