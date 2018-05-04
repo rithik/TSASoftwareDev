@@ -1,5 +1,5 @@
 from flask import Flask
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from database import Base
 import settings
@@ -71,12 +71,20 @@ class College(Base):
         self.email = email
         self.password = password
 
+association_table = Table('association', Base.metadata,
+    Column('transcript_id', Integer, ForeignKey('transcript.id')),
+    Column('colleges_id', Integer, ForeignKey('colleges.id'))
+)
+
 class Transcript(Base):
     __tablename__ = 'transcript'
 
     id = Column(Integer, primary_key=True)
     student = Column(Integer)
     school = Column(Integer)
+
+    #colleges = db.relationship('College', backref='transcripts', lazy='dynamic')
+    colleges = relationship("College", secondary=association_table)
 
     _colleges = [] # append the id number here
 
