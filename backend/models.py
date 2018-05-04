@@ -1,5 +1,5 @@
 from flask import Flask
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from database import Base
 import settings
@@ -36,12 +36,14 @@ class Course(Base):
     grade = Column(String(length=5))
     credits = Column(Float)
     year = Column(Integer)
+    transcript_id = Column(Integer)
 
-    def __init__(self, name, grade, credits, year):
+    def __init__(self, name, grade, credits, year, tid):
         self.name = name
         self.grade = grade
         self.credits = credits
         self.year = year
+        self.transcript_id = tid
 
 class School(Base):
     __tablename__ = 'schools'
@@ -72,10 +74,12 @@ class College(Base):
 class Transcript(Base):
     __tablename__ = 'transcripts'
 
-    id = Column(Integer, primary_key=True) # matches the student id
-    courses = relationship('Course', backref='transcript', lazy='dynamic')
-    student = relationship('Student', backref='transcript', lazy='dynamic')
-    school = relationship('School', backref='transcripts', lazy='dynamic')
-    colleges = relationship('College', backref='transcripts', lazy='dynamic')
+    id = Column(Integer, primary_key=True)
+    student = Column(Integer)
+    school = Column(Integer)
 
-    # Add college by doing: transcript.colleges.append(c)
+    _colleges = [] # append the id number here
+
+    def __init__(self, student, school):
+        self.student = student
+        self.school = school

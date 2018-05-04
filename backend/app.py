@@ -65,6 +65,9 @@ def create_student(school_id): # Students must be registered through their schoo
             new_student = Student(first_name, last_name, email, password, int(school_id))
             db_session.add(new_student)
             db_session.commit()
+            transcript = Transcript(new_student.id, int(school_id))
+            db_session.add(transcript)
+            db_session.commit()
             log('Student Created')
             return redirect(url_for('.home_page'))
         return redirect(url_for('.home_page'))
@@ -131,10 +134,11 @@ def school_page(school_id):
         t = session.get('type', {})
         u = session.get('user', {})
         if int(school_id) == int(u) and t == 'school':
-            school = School.query.filter_by(id=int(school_id)).first()
+            transcripts = Transcript.query.filter_by(school=int(school_id)).all()
             d = {}
-            for k in school.transcripts:
-                d[k.id] = k.student.first_name + " " + k.student.last_name
+            for k in transcripts:
+                s = Student.query.filter_by(id=k.id).first()
+                d[k.id] = s.first_name + " " + s.last_name
             return render_template('school.html', transcripts=d)
         else:
             return 'Error: Not Authorized'
@@ -145,10 +149,12 @@ def college_page(college_id):
         t = session.get('type', {})
         u = session.get('user', {})
         if int(college_id) == int(u) and t == 'college':
-            college = College.query.filter_by(id=int(college_id)).first()
+            transcripts = Transcript.query.all()
             d = {}
-            for k in college.transcripts:
-                d[k.id] = k.student.first_name + " " + k.student.last_name
+            for k in transcripts:
+                if int(college_id) in k._colleges:
+                    s = Student.query.filter_by(id=k.id).first()
+                    d[k.id] = s.first_name + " " + s.last_name
             return render_template('college.html', transcripts=d)
         else:
             return 'Error: Not Authorized'
@@ -164,7 +170,7 @@ def add_course(tid):
             grade = request.form["grade"]
             credits = float(request.form["credits"])
             year = int(request.form["year"])
-            new_course = Course(name, grade, credits, year)
+            new_course = Course(name, grade, credits, year, int(tid))
             db_session.add(new_course)
             db_session.commit()
             log('Added Course')
@@ -175,17 +181,11 @@ def add_course(tid):
 @app.route('/transcript/<tid>', methods=["GET", "POST"])
 def view_transcript(tid):
     if request.method == "GET":
-        t = Transcript.query.filter_by(id=int(tid)).first()
+        transcripts = Transcript.query.filter_by(id=int(tid)).first()
         t = session.get('type', {})
         u = session.get('user', {})
-        if t.student.id == int(u) or t.school.id == int(u):
-            courses = t.courses
-            return render_template('transcript.html', courses=courses)
-        q = []
-        for x in t.colleges:
-            q.append(x.id)
-        if int(u) in q:
-            courses = t.courses
+        if t.student.id == int(u) or t.school.id == int(u) or int(u) in transcripts._colleges:
+            courses = Course.query.filter_by(transcript_id=int(tid)).all()
             return render_template('transcript.html', courses=courses)
         return "Error: Not Authorized"
 
@@ -197,10 +197,7 @@ def add_college(tid):
         u = session.get('user', {})
         if t.student.id == int(u):
             cid = request.form['college_id']
-            c = College.query.filter_by(id=int(cid)).first()
-            t.colleges.append(c)
-            db_session.add(t)
-            db_session.commit()
+            t._colleges.append(cid)
             return redirect(url_for('.view_transcript'))
         return "Error: Not Authorized"
     if request.method == "GET":
