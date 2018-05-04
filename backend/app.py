@@ -55,11 +55,11 @@ def create_student(school_id): # Students must be registered through their schoo
         last_name = request.form["last_name"]
         email = request.form["email"]
         password = request.form["password"]
-        confirm_password = request.form["confirm_password"]
+        # confirm_password = request.form["confirm_password"]
         if not email.index("@") > 0 and not email.index(".") > email.index("@"):
             return redirect(url_for('.home_page'))
-        if not confirm_password == password:
-            return redirect(url_for('.home_page'))
+        # if not confirm_password == password:
+        #     return redirect(url_for('.home_page'))
         u = Student.query.filter_by(email=email).count()
         if u == 0:
             new_student = Student(first_name, last_name, email, password, int(school_id))
@@ -76,13 +76,14 @@ def create_inst():
     if request.method == "GET":
         return render_template('register.html')
     if request.method == "POST":
+        print(request.form)
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
-        confirm_password = request.form["confirm_password"]
-        option = {1: 'school', 2: 'college'}[request.form['option']]
-        if not confirm_password == password:
-            return redirect(url_for('.home_page'))
+        # confirm_password = request.form["confirm_password"]
+        option = {1: 'school', 2: 'college'}[int(request.form['option'])]
+        # if not confirm_password == password:
+        #     return redirect(url_for('.home_page'))
         if option == 'school':
             new_school = School(name, email, password)
             db_session.add(new_school)
